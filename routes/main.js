@@ -4,6 +4,9 @@ const fs = require("fs");
 const app = express.Router();
 const log = require("../structs/log.js");
 const path = require("path");
+const { getAccountIdData, addEliminationHypePoints, addVictoryHypePoints, subtractBusFareHypePoints } = require("./../structs/functions.js");
+const User = require("../model/user.js");
+const Arena = require("../model/arena.js");
 
 const { verifyToken, verifyClient } = require("../tokenManager/tokenVerify.js");
 
@@ -186,9 +189,32 @@ app.get("/fortnite/api/game/v2/enabled_features", (req, res) => {
     res.json([]);
 });
 
-app.get("/api/v1/events/Fortnite/download/*", (req, res) => {
-    log.debug("GET /api/v1/events/Fortnite/download/* called");
-    res.json({});
+app.get("/api/v1/events/Fortnite/download/:accountId", async (req, res) => {
+    const accountId = req.params.accountId;
+
+    try {
+        const playerData = await Arena.findOne({ accountId: accountId });
+        const hypePoints = playerData ? playerData.hype : 0;
+        const division = playerData ? playerData.division : 0;
+
+        const eventsDataPath = path.join(__dirname, "./../responses/eventlistactive.json");
+        const events = JSON.parse(fs.readFileSync(eventsDataPath, 'utf-8'));
+
+        events.player = {
+            accountId: accountId,
+            gameId: "Fortnite",
+            persistentScores: {
+                Hype: hypePoints
+            },
+            tokens: [`ARENA_S8_Division${division + 1}`]
+        };
+
+        res.json(events);
+
+    } catch (error) {
+        console.error("Error fetching Arena data:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 });
 
 app.get("/fortnite/api/game/v2/twitch/*", (req, res) => {
@@ -220,12 +246,6 @@ app.get("/fortnite/api/receipts/v1/account/*/receipts", (req, res) => {
 app.get("/fortnite/api/game/v2/leaderboards/cohort/*", (req, res) => {
     log.debug("GET /fortnite/api/game/v2/leaderboards/cohort/* called");
     res.json([]);
-});
-
-app.post("/datarouter/api/v1/public/data", (req, res) => {
-    log.debug("POST /datarouter/api/v1/public/data called");
-    res.status(204);
-    res.end();
 });
 
 app.post("/api/v1/assets/Fortnite/*/*", async (req, res) => {
@@ -319,5 +339,110 @@ app.get("/fortnite/api/game/v2/br-inventory/account/*", async (req, res) => {
         }
     })
 })
+
+app.get("/hotconfigs/v2/livefn.json", async (req, res) => {
+    log.debug("GET /hotconfigs/v2/livefn.json called");
+
+    res.json({
+        "HotConfigData": [
+        {
+          "AppId": "livefn",
+          "EpicApp": "FortniteLivefn",
+          "Modules": [
+            {
+              "ModuleName": "GameServiceMcp",
+              "Endpoints": {
+                "Android": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "DedicatedServer": "fngw-mcp-ds-livefn.ol.epicgames.com",
+                "Default": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "IOS": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "Linux": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "Mac": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "PS4": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "PS5": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "Switch": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "Windows": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "XB1": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "XSX": "fngw-mcp-gc-livefn.ol.epicgames.com",
+                "XboxOneGDK": "fngw-mcp-gc-livefn.ol.epicgames.com",
+              },
+            },
+          ],
+        },
+      ],
+    })
+})
+
+app.post("/publickey/v2/publickey", async (req, res) => {
+    const body = req.body || {};
+    return res.json({
+        "key": body.key,
+        "accountId": req.query.accountId,
+        "key_guid": uuid.v4(),
+        "expiration": "9999-12-31T23:59:59.999Z",
+        "jwt": "Interlude",
+        "type2": "legacy",
+    });
+})
+
+app.post("/publickey/v2/publickey/", async (req, res) => {
+    const body = req.body || {};
+    return res.json({
+        "key": body.key,
+        "accountId": req.query.accountId || "Havoc",
+        "key_guid": uuid.v4(),
+        "expiration": "9999-12-31T23:59:59.999Z",
+        "jwt": "Interlude",
+        "type": "legacy",
+    });
+})
+
+app.post("/datarouter/api/v1/public/data", async (req, res) => {
+    try {
+        const accountId = getAccountIdData(req.query.UserID);
+        const data = req.body.Events;
+
+        if (Array.isArray(data) && data.length > 0) {
+            const findUser = await User.findOne({accountId});
+
+            if (findUser) {
+                for (const event of data) {
+                    const { EventName, ProviderType, PlayerKilledPlayerEventCount } = event;
+
+                    if (EventName && ProviderType === "Client") {
+                        const playerKills = Number(PlayerKilledPlayerEventCount) || 0;
+
+                        switch (EventName) {
+                            case "Athena.ClientWonMatch":
+                                await addVictoryHypePoints(findUser);
+
+                                break;
+                            case "Combat.AthenaClientEngagement": 
+                                for (let i = 0; i < playerKills; i++) {
+                                    await addEliminationHypePoints(findUser);
+                                    console.log(`Added elimination hype points for user: ${accountId}`);
+                                }
+
+                                break;
+
+                            case "Combat.ClientPlayerDeath":
+
+                            break;
+                            default:
+                                log.debug(`Event List: ${EventName}`);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        res.status(204).end();
+    } catch (error) {
+        log.error("Error processing data:", error);
+        console.log("Error processing data:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
 
 module.exports = app;

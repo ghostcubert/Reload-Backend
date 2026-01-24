@@ -22,7 +22,6 @@ class CheckForUpdate {
 
             return false;
         } catch (error) {
-            log.error(`Error while checking for updates: ${error.message}`);
             return false;
         }
     }
