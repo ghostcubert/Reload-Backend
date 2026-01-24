@@ -1171,6 +1171,13 @@
           "hidden": true,
           "special_border": "None",
           "_type": "FortPlaylistInfo"
+        },
+        {
+          "image": "https://i.imgur.com/IdUjyZg.png",
+          "playlist_name": "Playlist_ShowdownAlt_Solo",
+          "hidden": false,
+          "special_border": "None",
+          "_type": "FortPlaylistInfo"
         }
       ]
     },
@@ -1190,6 +1197,31 @@
   "tournamentinformation": {
     "tournament_info": {
       "tournaments": [
+        {
+          "title_color": "FFFFFF",
+          "loading_screen_image": "https://i.imgur.com/IdUjyZg.png",
+          "background_text_color": "1B1B1B",
+          "background_right_color": "DD091A",
+          "poster_back_image": "https://i.imgur.com/IdUjyZg.png",
+          "_type": "Tournament Display Info",
+          "pin_earned_text": "Arena Solo Game mode!",
+          "tournament_display_id": "ArenaSolo",
+          "highlight_color": "FFFFFF",
+          "schedule_info": "February 1st, 2nd & 3rd: 2pm - 5pm JST",
+          "primary_color": "FFFFFF",
+          "flavor_description": "cool",
+          "poster_front_image": "https://i.imgur.com/ife7DhO.jpeg",
+          "short_format_title": "Event Sessions",
+          "title_line_1": "Lategame Arena",
+          "shadow_color": "1B1B1B",
+          "details_description": "description",
+          "background_left_color": "F81B2D",
+          "long_format_title": "Arena",
+          "poster_fade_color": "DD091A",
+          "secondary_color": "1B1B1B",
+          "playlist_tile_image": "https://i.imgur.com/IdUjyZg.png",
+          "base_color": "FFFFFF"
+        },
         {
           "title_color": "FFFFFF",
           "loading_screen_image": "https://i.imgur.com/ImIwpRm.png",
