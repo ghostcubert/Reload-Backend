@@ -9,6 +9,7 @@ const User = require("../model/user.js");
 const Profile = require("../model/profiles.js");
 const profileManager = require("../structs/profile.js");
 const Friends = require("../model/friends.js");
+const SaCCodes = require("../model/saccodes.js");
 const Arena = require("../model/arena.js");
 const CatalogConfig = require('../Config/catalog_config.json');
 
