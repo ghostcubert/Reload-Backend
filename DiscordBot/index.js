@@ -6,6 +6,8 @@ const config = JSON.parse(fs.readFileSync("./Config/config.json").toString());
 const log = require("../structs/log.js");
 const Users = require("../model/user.js");
 
+global.discordClient = client;
+
 client.once("ready", () => {
     log.bot("Bot is up and running!");
 

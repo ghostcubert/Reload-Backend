@@ -27,10 +27,21 @@ router.get("/api/launcher/leaderboard", async (req, res) => {
                 const user = await User.findOne({ accountId: player.accountId }).lean();
                 if (!user) return null;
 
+                let avatarHash = null;
+                try {
+                    if (user.discordId && req.client) {
+                        const discordUser = await req.client.users.fetch(user.discordId);
+                        avatarHash = discordUser.avatar;
+                    }
+                } catch (err) {
+                }
+
                 return {
                     username: user.username,
                     hype: player.hype,
-                    division: calculateDivision(player.hype)
+                    division: calculateDivision(player.hype),
+                    discordId: user.discordId || null,
+                    avatarHash: avatarHash || null
                 };
             })
         );

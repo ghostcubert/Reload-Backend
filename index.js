@@ -108,6 +108,14 @@ app.use(rateLimit({ windowMs: 0.5 * 60 * 1000, max: 55 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+req.client = global.discordClient; 
+if (req.url.includes("..")) {
+return res.redirect("https://youtu.be/dQw4w9WgXcQ");
+}
+next();
+});
+
 fs.readdirSync("./routes").forEach(fileName => {
 try {
 app.use(require(`./routes/${fileName}`));
@@ -122,6 +130,16 @@ app.use(require(`./Api/${fileName}`));
 } catch (err) {
 log.error(`Reload API Error: Failed to load ${fileName}`)
 }
+});
+
+app.use((req, res) => {
+const url = req.originalUrl;
+log.debug(`Missing endpoint: ${req.method} ${url} request port ${req.socket.localPort}`);
+error.createError(
+"errors.com.epicgames.common.not_found",
+"Sorry the resource you were trying to find could not be found",
+undefined, 1004, undefined, 404, res
+);
 });
 
 app.get("/unknown", (req, res) => {
@@ -266,20 +284,6 @@ throw err;
 });
 }
 }
-
-app.use((req, res, next) => {
-const url = req.originalUrl;
-log.debug(`Missing endpoint: ${req.method} ${url} request port ${req.socket.localPort}`);
-if (req.url.includes("..")) {
-res.redirect("https://youtu.be/dQw4w9WgXcQ");
-return;
-}
-error.createError(
-"errors.com.epicgames.common.not_found",
-"Sorry the resource you were trying to find could not be found",
-undefined, 1004, undefined, 404, res
-);
-});
 
 function DateAddHours(pdate, number) {
 let date = pdate;
