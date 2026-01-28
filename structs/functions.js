@@ -9,7 +9,6 @@ const User = require("../model/user.js");
 const Profile = require("../model/profiles.js");
 const profileManager = require("../structs/profile.js");
 const Friends = require("../model/friends.js");
-const SaCCodes = require("../model/saccodes.js");
 const Arena = require("../model/arena.js");
 const CatalogConfig = require('../Config/catalog_config.json');
 
@@ -548,7 +547,7 @@ async function subtractPoints(user, points) {
 }
 
 function getNextDivision(hypePoints, currentDivision) {
-    const thresholds = [1000, 2500, 4000, 5500, 7000, 10000, 15000];
+    const thresholds = [400, 800, 1200, 2000, 3000, 5000, 7500, 10000, 15000, 999999999999999999999999999999999999999999999];
     for (let i = 0; i < thresholds.length; i++) {
         if (hypePoints < thresholds[i]) return i;
     }

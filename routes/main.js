@@ -429,7 +429,7 @@ app.post("/datarouter/api/v1/public/data", async (req, res) => {
 
                             break;
                             default:
-                                log.debug(`Event List: ${EventName}`);
+                                //log.debug(`Event List: ${EventName}`);
                                 break;
                         }
                     }

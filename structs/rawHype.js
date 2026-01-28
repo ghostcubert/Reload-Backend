@@ -1,6 +1,6 @@
 const Arena = require("../model/arena.js");
 
-const HYPE_THRESHOLDS = [1000, 2500, 4000, 5500, 7000, 10000, 15000];
+const HYPE_THRESHOLDS = [400, 800, 1200, 2000, 3000, 5000, 7500, 10000, 15000, 99999999999999999999999999999999999999999999];
 
 function calculateDivision(hype) {
     for (let i = 0; i < HYPE_THRESHOLDS.length; i++) {

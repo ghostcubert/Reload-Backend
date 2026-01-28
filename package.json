@@ -27,10 +27,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Project-Reload/Reload-Backend.git"
-  },
   "keywords": [
     "fortnite",
     "backend",
@@ -39,9 +35,5 @@
     "v2"
   ],
   "author": "burlone0",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/Project-Reload/Reload-Backend/issues"
-  },
-  "homepage": "https://github.com/Project-Reload/Reload-Backend#readme"
+  "license": "GPL-3.0"
 }

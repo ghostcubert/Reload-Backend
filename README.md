@@ -171,6 +171,9 @@ Right now the only tested version is **27.11**, if you test version, have questi
 ## License
 This **project/backend** is licensed under the **BSD 3-Clause License.**
 
+## Disclaimer
+All **Fortnite OG** related projects named **Project Reload**, **Reload**, **Reload Backend** or using **our official images** are not owned or affiliated with us. Please do not trust and report them via discord to **burlone413**. All rights are licensed to [burlone0](https://github.com/burlone0)
+
 ## Credits
 Credits have been moved to the **Contributors** section of github. If I forgot to include someone, write to **burlone413** on Discord
 
