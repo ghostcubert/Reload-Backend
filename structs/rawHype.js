@@ -4,9 +4,11 @@ const HYPE_THRESHOLDS = [1000, 2500, 4000, 5500, 7000, 10000, 15000];
 
 function calculateDivision(hype) {
     for (let i = 0; i < HYPE_THRESHOLDS.length; i++) {
-        if (hype < HYPE_THRESHOLDS[i]) return i + 1; 
+        if (hype < HYPE_THRESHOLDS[i]) {
+            return i + 1; 
+        }
     }
-    return HYPE_THRESHOLDS.length + 1;
+    return HYPE_THRESHOLDS.length;
 }
 
 async function addCommandHypePoints(user, points = 1) {
@@ -20,8 +22,8 @@ async function addCommandHypePoints(user, points = 1) {
 
     const division = calculateDivision(result.hype);
     await Arena.updateOne(
-    { accountId },
-    { $set: { division } }
+        { accountId },
+        { $set: { division } }
     );
 
     return result.hype;
