@@ -1,7 +1,7 @@
 {
   "//": "BR Item Shop Config",
   "daily1": {
-      "itemGrants": ["AthenaCharacter:CID_703_Athena_Commando_M_Cyclone"],
+      "itemGrants": [""],
       "price": 0
   },
   "daily2": {
